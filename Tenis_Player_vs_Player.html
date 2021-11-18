@@ -1,0 +1,1436 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>DIV Method</title>
+    <style>
+      #container {
+        width: 900px;
+        height: 900px;
+        background-color: rgb(253, 233, 220);
+        position: absolute;
+        color: rgb(54, 35, 0);
+        border-radius: 20px;
+      }
+
+      .ball {
+        position: absolute;
+        width: 50px;
+        height: 50px;
+        left: 50%;
+        transform: translate(-50%, 0);
+        background-color: rgb(250, 204, 0);
+        overflow: auto;
+        border-radius: 50px;
+      }
+      .stick {
+        width: 200px;
+        height: 30px;
+        border-radius: 20px;
+        border-bottom: solid;
+        border-width: 5px;
+      }
+      #gameBall {
+        visibility: hidden;
+        transition: transform 5s;
+        z-index: 10;
+      }
+      #gb1 {
+        position: absolute;
+        width: 75%;
+        height: 75%;
+        left: 5%;
+        top: 5%;
+        border-radius: 300px;
+        background-color: rgb(255, 213, 25);
+      }
+      #gb2 {
+        position: absolute;
+        width: 30%;
+        height: 30%;
+        left: 15%;
+        top: 15%;
+        border-radius: 300px;
+        background-color: seashell;
+      }
+      #animBall {
+        position: absolute;
+        width: 50px;
+        height: 50px;
+        left: 50%;
+        transform: translate(-50%, 0);
+        background-color: rgb(250, 204, 0);
+        border-radius: 200px;
+        overflow: auto;
+        /* border-bottom: solid; border-width: 5px; */
+      }
+      #topStick {
+        position: absolute;
+        width: 200px;
+        top: 2%;
+        left: 50%;
+        transform: translate(-50%, 0);
+        display: none;
+        background-color: rgb(118, 203, 236);
+        color: rgb(0, 50, 70);
+        /* border-top: solid; */
+      }
+      #bottomStick {
+        position: absolute;
+        width: 200px;
+        top: 95%;
+        left: 50%;
+        transform: translate(-50%, 0);
+        display: none;
+        background-color: rgb(245, 108, 67);
+        color: #470000;
+      }
+      .st1 {
+        position: absolute;
+        width: 95%;
+        height: 80%;
+        left: 2%;
+        top: 0%;
+        border-radius: 20px;
+        background-color: rgb(255, 125, 86);
+        /* rgb(255, 84, 32) */
+      }
+      .st2 {
+        position: absolute;
+        width: 85%;
+        height: 10%;
+        left: 8%;
+        top: 10%;
+        border-radius: 20px;
+        background-color: seashell;
+      }
+      #startWin {
+        width: 300px;
+        height: 300px;
+        /* background-color: antiquewhite; */
+        position: absolute;
+        /* left: 50%; */
+        transform: translate(100%, 100%);
+        font-family: monospace;
+        text-align: center;
+        font-weight: 100;
+        font-style: italic;
+      }
+      .choose-side-button {
+        position: absolute;
+        font-size: 35px;
+        font-style: normal;
+        padding-left: 10px;
+        padding-right: 10px;
+        font-weight: 100;
+        background-color: rgb(255, 84, 32);
+        border-radius: 30px;
+        border-bottom: solid;
+        border-width: 4px;
+        border-collapse: collapse;
+      }
+      #top-btn,
+      #top-btn2 {
+        padding-left: 35px;
+        padding-right: 35px;
+        left: 0%;
+        background-color: rgb(54, 192, 247);
+        transition: transform 0.5s, background-color 500ms;
+        color: rgb(0, 50, 70);
+      }
+      #bottom-btn,
+      #bottom-btn2 {
+        transition: transform 0.5s, background-color 500ms;
+        /* color: #fd5c5c; */
+        background-color: #ec4343;
+        color: #470000;
+      }
+      #easy-btn {
+        left: 0%;
+        margin-left: -25px;
+        background-color: rgb(114, 221, 92);
+        transition: transform 0.5s, background-color 500ms;
+        color: rgb(8, 49, 0);
+      }
+      #normal-btn {
+        left: 0%;
+        margin-left: 80px;
+        background-color: rgb(255, 166, 0);
+        transition: transform 0.5s, background-color 500ms;
+        color: rgb(54, 35, 0);
+      }
+      #hard-btn {
+        left: 0%;
+        margin-left: 225px;
+        background-color: rgb(253, 60, 60);
+        transition: transform 0.5s, background-color 500ms;
+        color: rgb(77, 0, 0);
+      }
+      #start-btn {
+        color: rgb(59, 2, 112);
+        width: 200px;
+        font-size: 30px;
+        font-weight: 600;
+        padding-left: 30px;
+        padding-right: 30px;
+        left: 5%;
+        background-color: skyblue;
+        transition: transform 0.5s, background-color 500ms;
+      }
+      #win5 {
+        transition: transform 1s;
+      }
+      table {
+        position: absolute;
+        top: 48%;
+        transform: translateY(-48%);
+      }
+      #line {
+        position: relative;
+        display: inline-block;
+        width: 37px;
+        height: 15px;
+        background-color: rgb(255, 255, 255);
+        border-radius: 30px;
+        margin-left: 10px;
+        margin-right: 10px;
+      }
+      #shadow {
+        position: absolute;
+        top: 95%;
+        left: 50%;
+        width: 70%;
+        height: 20%;
+        transform: translateX(-50%);
+        background-color: rgb(53, 53, 53);
+        border-radius: 100px / 30px;
+        z-index: -1;
+      }
+      #strike-win {
+        position: absolute;
+        top: 47%;
+        left: 50%;
+        transform: translateX(-50%) translateY(-50%);
+      }
+      #strike {
+        font-size: 1px;
+        font-family: "Franklin Gothic Medium", "Arial Narrow", Arial, sans-serif;
+        font-style: italic;
+        color: #ff3737;
+        transition: all 1s;
+      }
+      .count {
+        position: absolute;
+        display: block;
+        left: 100%;
+        width: 50px;
+        height: 50px;
+        text-align: center;
+        font-family: "Franklin Gothic Medium", "Arial Narrow", Arial, sans-serif;
+        font-size: 40px;
+        background-color: rgb(255, 205, 205);
+        border-radius: 10px;
+        transition: all 500ms;
+        border-bottom: solid;
+        border-width: 5px;
+      }
+    </style>
+  </head>
+  <body style="user-select: none">
+    <div id="container">
+      <table>
+        <tr id="trLine">
+          <td id="line"></td>
+          <td id="line"></td>
+          <td id="line"></td>
+          <td id="line"></td>
+          <td id="line"></td>
+          <td id="line"></td>
+          <td id="line"></td>
+          <td id="line"></td>
+          <td id="line"></td>
+          <td id="line"></td>
+          <td id="line"></td>
+          <td id="line"></td>
+          <td id="line"></td>
+          <td id="line"></td>
+          <td id="line"></td>
+        </tr>
+      </table>
+
+      <div id="gameBall" class="ball">
+        <div id="gb1">
+          <div id="gb2"></div>
+        </div>
+      </div>
+
+      <div class="stick" id="topStick">
+        <div class="st1" style="background-color: skyblue">
+          <div class="st2"></div>
+        </div>
+      </div>
+
+      <div class="stick" id="bottomStick">
+        <div class="st1">
+          <div class="st2"></div>
+        </div>
+      </div>
+
+      <div id="animBall">
+        <div id="gb1">
+          <div id="gb2"></div>
+        </div>
+      </div>
+
+      <div id="startWin">
+        <div id="win1" style="display: none">
+          <h1 id="wel" style="font-size: 40px">Welcome!</h1>
+          <h1 style="font-size: 35px">Pick a side:</h1>
+          <div id="top-btn" class="choose-side-button"">
+            <span style="position: relative; z-index: 10">TOP</span>
+            <div class="st1" style="background-color: rgb(118, 203, 236)">
+              <div class="st2"></div>
+            </div>
+          </div>
+          <div id="bottom-btn" class="choose-side-button" style="left: 50%">
+            <span style="position: relative; z-index: 10">BOTTOM</span>
+            <div class="st1" style="background-color: #fd5c5c">
+              <div class="st2"></div>
+            </div>
+          </div>
+        </div>
+
+        <div id="win2" style="display: none">
+          <h1 style="font-size: 35px">
+            Choose <br />
+            difficulty:
+          </h1>
+          <div
+            id="easy-btn"
+            class="choose-side-button"
+            style="background-color: rgb(77, 196, 53)"
+          >
+            <span style="position: relative; z-index: 10">EASY</span>
+            <div class="st1" style="background-color: rgb(114, 221, 92)">
+              <div class="st2"></div>
+            </div>
+          </div>
+
+          <div id="normal-btn" class="choose-side-button">
+            <span style="position: relative; z-index: 10">NORMAL</span>
+            <div class="st1" style="background-color: rgb(255, 184, 51)">
+              <div class="st2"></div>
+            </div>
+          </div>
+
+          <div id="hard-btn" class="choose-side-button">
+            <span style="position: relative; z-index: 10">HARD</span>
+            <div class="st1" style="background-color: rgb(255, 87, 87)">
+              <div class="st2"></div>
+            </div>
+          </div>
+        </div>
+
+        <div id="win3" style="display: none">
+          <h1 style="font-size: 33px">Which player starts first?</h1>
+
+          <div id="top-btn2" class="choose-side-button"">
+            <span style="position: relative; z-index: 10">TOP</span>
+            <div class="st1" style="background-color: rgb(118, 203, 236)">
+              <div class="st2"></div>
+            </div>
+          </div>
+
+          <div id="bottom-btn2" class="choose-side-button" style="left: 50%">
+            <span style="position: relative; z-index: 10">BOTTOM</span>
+            <div class="st1" style="background-color: #fd5c5c">
+              <div class="st2"></div>
+            </div>
+          </div>
+        </div>
+
+        <div id="win4" style="display: none">
+          <h1 style="font-size: 30px">Move Top-stick with arrow-keys</h1>
+          <h1 style="font-size: 30px">Move Bottom-stick with A
+            <!-- ignore-prettier -->
+            <span style="font-size: 25px; padding-left: 2px; padding-right: 2px">&</span>
+            D keys
+          </h1>
+          <div
+            id="start-btn"
+            class="choose-side-button"
+            style="background-color: #a051eb">
+            <!-- ignore-prettier -->
+            <span style="position: relative; z-index: 10">Got it, <br />Let's Start!</span>
+            <div class="st1" style="background-color: #b86cff">
+              <div class="st2"></div>
+            </div>
+          </div>
+        </div>
+
+        <div id="win5" style="display: none">
+          <!-- ignore-prettier -->
+          <h1>Press SPACE <br/>to lunch the ball!</h1>
+        </div>
+      </div>
+
+      <div id="strike-win" style="display: none">
+        <h1 id="strike">Strike!</h1>
+      </div>
+
+      <!-- ignore-prettier -->
+      <div
+        id="count-div-bottom" class="count" style="
+          display: none; top: 90%; margin-left: 20px; margin-top: 25px;
+          background-color: rgb(245, 108, 67);">
+        <span id="count-bottom" style="position: relative; z-index: 10"></span>
+        <div
+          class="st1" style="
+            background-color: rgb(255, 125, 86); border-radius: 10px; height: 43px;">
+          <div class="st2" style="height: 3px"></div>
+        </div>
+      </div>
+
+      <div
+        id="count-div-top" class="count" style="
+          display: none; margin-left: 20px; margin-top: 15px;
+          background-color: rgb(98, 191, 228);">
+        <span id="count-top" style="position: relative; z-index: 10"></span>
+        <div
+          class="st1" style="background-color: skyblue; border-radius: 10px; height: 43px">
+          <div class="st2" style="height: 3px"></div>
+        </div>
+      </div>
+      
+    </div>
+
+    <script>
+      const ball = document.getElementById("gameBall");
+      const ballStyle = getComputedStyle(ball);
+
+      const animBall = document.getElementById("animBall");
+      const animBallStyle = getComputedStyle(animBall);
+
+      const stick1 = document.getElementById("topStick");
+      const stick2 = document.getElementById("bottomStick");
+
+      const strike = document.getElementById("strike");
+      const strikeWin = document.getElementById("strike-win");
+
+      const countTop = document.getElementById("count-top");
+      const countDivTop = document.getElementById("count-div-top");
+
+      const countBottom = document.getElementById("count-bottom");
+      const countDivBottom = document.getElementById("count-div-bottom");
+
+      let borderRight = 850;
+      let borderLeft = 5;
+      let borderTop = 0;
+      let borderBottom = 900;
+      let sticksWid = 200;
+      let startAt = null;
+      let difficult = null;
+      let gameStart = true;
+      let ballLaunched = false;
+      let inter = null;
+      let isAnim = true;
+      let animEnd = false;
+      let winCountTop = 0;
+      let winCountBottom = 0;
+      let stick1MrgnLeft = 0;
+      let stick2MrgnLeft = 0;
+      let ballMrgnTop = 0;
+      let ballMrgnLeft = 0;
+      let stroke = false;
+      let inter39 = null;
+      let inter37 = null;
+      let inter68 = null;
+      let inter65 = null;
+
+      setTimeout(() => {
+        startWinAnim();
+      }, 500);
+
+      buttons();
+
+      function strikeAnim(div, count, winCount) {
+        clearInterval(inter37);
+        clearInterval(inter39);
+        clearInterval(inter39);
+        clearInterval(inter68);
+
+        stick1MrgnLeft = 0;
+        stick2MrgnLeft = 0;
+        ballMrgnTop = 0;
+        ballMrgnLeft = 0;
+        ballLaunched = false;
+        stroke = true;
+
+        setTimeout(() => {
+          stick1.style.marginLeft = "0px";
+          stick2.style.marginLeft = "0px";
+          stroke = false;
+          startPos(ball);
+        }, 2000);
+
+        strikeWin.style.display = "block";
+        setTimeout(() => {
+          strike.style.transform = "rotate(720deg) scale(100)";
+        }, 100);
+        setTimeout(() => {
+          strike.style.transform = "rotate(-720deg)";
+        }, 2100);
+
+        count.innerHTML = winCount;
+        div.style.transform = "scale(1.5)";
+        setTimeout(() => {
+          div.style.transform = "scale(1)";
+        }, 500);
+      }
+
+      function startPos(ballEl) {
+        const compStick1 = getComputedStyle(stick1);
+        const compStick2 = getComputedStyle(stick2);
+        let stk1X = +compStick1.marginLeft.slice(0, -2);
+        let stk2X = +compStick2.marginLeft.slice(0, -2);
+
+        if (startAt == "top") {
+          ballEl.style =
+            "top: 2%; margin-top: 30px; visibility: visible; left: 50%; transform: translate(-50%, 0);";
+          // ballEl.style.marginLeft = `${stk1X}px`;
+        } else if (startAt == "bottom") {
+          ballEl.style =
+            "top: 89.5%; visibility: visible; left: 50%; transform: translate(-50%, 0);";
+          // ballEl.style.marginLeft = `${stk2X}px`;
+        }
+      }
+
+      function buttons() {
+        const topBtn = document.getElementById("top-btn");
+        const bottomBtn = document.getElementById("bottom-btn");
+        const easyBtn = document.getElementById("easy-btn");
+        const normalBtn = document.getElementById("normal-btn");
+        const hardBtn = document.getElementById("hard-btn");
+        const topBtn2 = document.getElementById("top-btn2");
+        const bottomBtn2 = document.getElementById("bottom-btn2");
+        const startBtn = document.getElementById("start-btn");
+
+        topBtn.addEventListener("mouseover", () => {
+          setTimeout(() => {
+            topBtn.style.transform = "scale(1.2)";
+          }, 5);
+        });
+        topBtn.addEventListener("mouseout", () => {
+          setTimeout(() => {
+            topBtn.style.transform = "scale(1)";
+          }, 5);
+        });
+        topBtn.addEventListener("mousedown", () => {
+          topBtn.style.borderBottomWidth = "2px";
+          topBtn.style.marginTop = "3px";
+        });
+        topBtn.addEventListener("mouseup", () => {
+          topBtn.style.borderBottomWidth = "4px";
+          topBtn.style.marginTop = "0px";
+          setTimeout(() => {
+            document.getElementById("win1").style.display = "none";
+            document.getElementById("win2").style.display = "block";
+          }, 100);
+        });
+
+        bottomBtn.addEventListener("mouseover", () => {
+          setTimeout(() => {
+            bottomBtn.style.transform = "scale(1.2)";
+          }, 5);
+        });
+        bottomBtn.addEventListener("mouseout", () => {
+          setTimeout(() => {
+            bottomBtn.style.transform = "scale(1)";
+          }, 5);
+        });
+        bottomBtn.addEventListener("mousedown", () => {
+          bottomBtn.style.borderBottomWidth = "2px";
+          bottomBtn.style.marginTop = "3px";
+        });
+        bottomBtn.addEventListener("mouseup", () => {
+          bottomBtn.style.borderBottomWidth = "4px";
+          bottomBtn.style.marginTop = "0px";
+          setTimeout(() => {
+            document.getElementById("win1").style.display = "none";
+            document.getElementById("win2").style.display = "block";
+          }, 100);
+        });
+
+        easyBtn.addEventListener("mouseover", () => {
+          setTimeout(() => {
+            easyBtn.style.transform = "scale(1.1)";
+          }, 5);
+        });
+        easyBtn.addEventListener("mouseout", () => {
+          setTimeout(() => {
+            easyBtn.style.transform = "scale(1)";
+          }, 5);
+        });
+        easyBtn.addEventListener("mousedown", () => {
+          easyBtn.style.borderBottomWidth = "2px";
+          easyBtn.style.marginTop = "3px";
+          difficult = "easy";
+        });
+        easyBtn.addEventListener("mouseup", () => {
+          easyBtn.style.borderBottomWidth = "4px";
+          easyBtn.style.marginTop = "0px";
+          setTimeout(() => {
+            document.getElementById("win2").style.display = "none";
+            document.getElementById("win3").style.display = "block";
+          }, 100);
+        });
+
+        normalBtn.addEventListener("mouseover", () => {
+          setTimeout(() => {
+            normalBtn.style.transform = "scale(1.1)";
+          }, 5);
+        });
+        normalBtn.addEventListener("mouseout", () => {
+          setTimeout(() => {
+            normalBtn.style.transform = "scale(1)";
+          }, 5);
+        });
+        normalBtn.addEventListener("mousedown", () => {
+          normalBtn.style.borderBottomWidth = "2px";
+          normalBtn.style.marginTop = "3px";
+          difficult = "normal";
+        });
+        normalBtn.addEventListener("mouseup", () => {
+          normalBtn.style.borderBottomWidth = "4px";
+          normalBtn.style.marginTop = "0px";
+          sticksWid = 150;
+
+          setTimeout(() => {
+            document.getElementById("win2").style.display = "none";
+            document.getElementById("win3").style.display = "block";
+          }, 100);
+        });
+
+        hardBtn.addEventListener("mouseover", () => {
+          setTimeout(() => {
+            hardBtn.style.transform = "scale(1.1)";
+          }, 5);
+        });
+        hardBtn.addEventListener("mouseout", () => {
+          setTimeout(() => {
+            hardBtn.style.transform = "scale(1)";
+          }, 5);
+        });
+        hardBtn.addEventListener("mousedown", () => {
+          hardBtn.style.borderBottomWidth = "2px";
+          hardBtn.style.marginTop = "3px";
+          difficult = "hard";
+        });
+        hardBtn.addEventListener("mouseup", () => {
+          hardBtn.style.borderBottomWidth = "4px";
+          hardBtn.style.marginTop = "0px";
+          sticksWid = 100;
+
+          setTimeout(() => {
+            document.getElementById("win2").style.display = "none";
+            document.getElementById("win3").style.display = "block";
+          }, 100);
+        });
+        topBtn2.addEventListener("mouseover", () => {
+          setTimeout(() => {
+            topBtn2.style.transform = "scale(1.2)";
+          }, 5);
+        });
+        topBtn2.addEventListener("mouseout", () => {
+          setTimeout(() => {
+            topBtn2.style.transform = "scale(1)";
+          }, 5);
+        });
+        topBtn2.addEventListener("mousedown", () => {
+          topBtn2.style.borderBottomWidth = "2px";
+          topBtn2.style.marginTop = "3px";
+          startAt = "top";
+        });
+        topBtn2.addEventListener("mouseup", () => {
+          topBtn2.style.borderBottomWidth = "4px";
+          topBtn2.style.marginTop = "0px";
+          setTimeout(() => {
+            document.getElementById("win3").style.display = "none";
+            document.getElementById("win4").style.display = "block";
+          }, 100);
+        });
+
+        bottomBtn2.addEventListener("mouseover", () => {
+          setTimeout(() => {
+            bottomBtn2.style.transform = "scale(1.2)";
+          }, 5);
+        });
+        bottomBtn2.addEventListener("mouseout", () => {
+          setTimeout(() => {
+            bottomBtn2.style.transform = "scale(1)";
+          }, 5);
+        });
+        bottomBtn2.addEventListener("mousedown", () => {
+          bottomBtn2.style.borderBottomWidth = "2px";
+          bottomBtn2.style.marginTop = "3px";
+          startAt = "bottom";
+        });
+        bottomBtn2.addEventListener("mouseup", () => {
+          bottomBtn2.style.borderBottomWidth = "4px";
+          bottomBtn2.style.marginTop = "0px";
+          setTimeout(() => {
+            document.getElementById("win3").style.display = "none";
+            document.getElementById("win4").style.display = "block";
+          }, 100);
+        });
+        startBtn.addEventListener("mouseover", () => {
+          setTimeout(() => {
+            startBtn.style.transform = "scale(1.2)";
+          }, 5);
+        });
+        startBtn.addEventListener("mouseout", () => {
+          setTimeout(() => {
+            startBtn.style.transform = "scale(1)";
+          }, 5);
+        });
+        startBtn.addEventListener("mousedown", () => {
+          startBtn.style.borderBottomWidth = "2px";
+          startBtn.style.marginTop = "3px";
+        });
+        startBtn.addEventListener("mouseup", () => {
+          startBtn.style.borderBottomWidth = "4px";
+          startBtn.style.marginTop = "0px";
+
+          setTimeout(() => {
+            document.getElementById("win4").style.display = "none";
+            document.getElementById("animBall").style.display = "none";
+            const win5 = document.getElementById("win5");
+            win5.style.display = "block";
+            countDivBottom.style.display = "block";
+            countDivTop.style.display = "block";
+            stick1.style.display = "block";
+            stick2.style.display = "block";
+            stick1.style.width = `${sticksWid}px`;
+            stick2.style.width = `${sticksWid}px`;
+            stickMove(ball);
+            startPos(ball);
+            isAnim = false;
+            setInterval(() => {
+              win5.style.transform = "scale(1.4)";
+              let sInner = setInterval(() => {
+                win5.style.transform = "scale(1)";
+                clearInterval(sInner);
+              }, 500);
+            }, 1000);
+            setTimeout(() => {
+              win5.style.transform = "scale(1.4)";
+            }, 50);
+            setTimeout(() => {
+              win5.style.transform = "scale(1)";
+            }, 500);
+          }, 100);
+        });
+      }
+
+      function startWinAnim() {
+        growBallAnim();
+        topSide(3, 3, "bottom", "left", animBall, animBallStyle);
+      }
+
+      function growBallAnim() {
+        ballWidth = +animBallStyle.width.slice(0, -2);
+        ballHeight = +animBallStyle.height.slice(0, -2);
+        mrgnTop = +animBallStyle.width.slice(0, -2);
+        mrgnLeft = +animBallStyle.height.slice(0, -2);
+        // ballOpacity = 1.0;
+
+        let inter = setInterval(() => {
+          ballWidth += 0.5;
+          ballHeight += 0.5;
+
+          animBall.style.width = `${ballWidth}px`;
+          animBall.style.height = `${ballHeight}px`;
+
+          if (animEnd === true) {
+            clearInterval(inter);
+            isAnim = false;
+          }
+        }, 5);
+      }
+
+      function hitAngle(ballEl) {
+        stick1X = getOffset(stick1).x;
+        stick1Y = getOffset(stick1).y;
+        stick2X = getOffset(stick2).x;
+        stick2Y = getOffset(stick2).y;
+        ballX = getOffset(ballEl).x + 25;
+        ballY = getOffset(ballEl).y;
+
+        let angle = null;
+        let speed = null;
+
+        if (ballY >= stick2Y - 50) {
+          let diffHasDefine = false;
+          // prettier-ignore
+          if (ballX >= stick2X - 50 && ballX <= stick2X + sticksWid * 0.04) {
+            clearInterval(inter);
+            if (diffHasDefine == false) {
+              if (difficult == "easy") {angle = 5; speed = 0.7;};
+              if (difficult == "normal") {angle = 7; speed = 1;};
+              if (difficult == "hard") {angle = 9; speed = 1.7;};
+              diffHasDefine = true;
+            }
+            bottomSide(angle, speed, "top", "left", ball, ballStyle);
+          } else if (
+            ballX >= stick2X + sticksWid * 0.96 &&
+            ballX <= stick2X + (sticksWid + 10)
+          ) {
+            clearInterval(inter);
+            if (diffHasDefine == false) {
+              if (difficult == "easy") {angle = 5; speed = 0.7;};
+              if (difficult == "normal") {angle = 7; speed = 1;};
+              if (difficult == "hard") {angle = 9; speed = 1.7;};
+              diffHasDefine = true;
+            }
+            bottomSide(angle, speed, "top", "right", ball, ballStyle);
+          } else if (
+            ballX > stick2X + sticksWid * 0.04 &&
+            ballX <= stick2X + sticksWid * 0.06
+          ) {
+            clearInterval(inter);
+            if (diffHasDefine == false) {
+              if (difficult == "easy")  {angle = 3; speed = 0.6;};
+              if (difficult == "normal")  {angle = 5; speed = 1;};
+              if (difficult == "hard")  {angle = 7; speed = 1.7;};
+              diffHasDefine = true;
+            }
+            bottomSide(angle, speed, "top", "left", ball, ballStyle);
+          } else if (
+            ballX >= stick2X + sticksWid * 0.9 &&
+            ballX < stick2X + sticksWid * 0.96
+          ) {
+            clearInterval(inter);
+            if (diffHasDefine == false) {
+              if (difficult == "easy") {angle = 3; speed = 0.6;};
+              if (difficult == "normal") {angle = 5; speed = 1;};
+              if (difficult == "hard") {angle = 7; speed = 1.7;};
+              diffHasDefine = true;
+            }
+            bottomSide(angle, speed, "top", "right", ball, ballStyle);
+          } else if (
+            ballX >= stick2X + sticksWid * 0.1 &&
+            ballX <= stick2X + sticksWid * 0.25
+          ) {
+            clearInterval(inter);
+            if (diffHasDefine == false) {
+              if (difficult == "easy") {angle = 2; speed = 1;};
+              if (difficult == "normal") {angle = 4; speed = 2;};
+              if (difficult == "hard") {angle = 6; speed = 3;};
+              diffHasDefine = true;
+            }
+            bottomSide(angle, speed, "top", "left", ball, ballStyle);
+          } else if (
+            ballX >= stick2X + sticksWid * 0.75 &&
+            ballX < stick2X + sticksWid * 0.9
+          ) {
+            clearInterval(inter);
+            if (diffHasDefine == false) {
+              if (difficult == "easy") {angle = 2; speed = 1;};
+              if (difficult == "normal") {angle = 4; speed = 2;};
+              if (difficult == "hard") {angle = 6; speed = 3;};
+              diffHasDefine = true;
+            }
+            bottomSide(angle, speed, "top", "right", ball, ballStyle);
+          } else if (
+            ballX > stick2X + sticksWid * 0.25 &&
+            ballX <= stick2X + sticksWid * 0.45
+          ) {
+            clearInterval(inter);
+            if (diffHasDefine == false) {
+              if (difficult == "easy") {angle = 2; speed = 2;};
+              if (difficult == "normal") {angle = 4; speed = 4;};
+              if (difficult == "hard") {angle = 6; speed = 6;};
+              diffHasDefine = true;
+            }
+            bottomSide(angle, speed, "top", "left", ball, ballStyle);
+          } else if (
+            ballX >= stick2X + sticksWid * 0.55 &&
+            ballX < stick2X + sticksWid * 0.75
+          ) {
+            clearInterval(inter);
+            if (diffHasDefine == false) {
+              if (difficult == "easy") {angle = 2; speed = 2;};
+              if (difficult == "normal") {angle = 4; speed = 4;};
+              if (difficult == "hard") {angle = 6; speed = 6;};
+              diffHasDefine = true;
+            }
+            bottomSide(angle, speed, "top", "right", ball, ballStyle);
+          } else if (
+            ballX >= stick2X + sticksWid * 0.45 &&
+            ballX < stick2X + sticksWid * 0.55
+          ) {
+            clearInterval(inter);
+            if (diffHasDefine == false) {
+              if (difficult == "easy") {angle = 0; speed = 3;};
+              if (difficult == "normal") {angle = 0; speed = 5;};
+              if (difficult == "hard") {angle = 0; speed = 7;};
+              diffHasDefine = true;
+            }
+            bottomSide(angle, speed, "top", "right", ball, ballStyle);
+          }
+        }
+        if (ballY <= stick1Y + 31) {
+          let diffHasDefine = false;
+          // prettier-ignore
+          if (ballX > stick1X - 50 && ballX < stick1X + sticksWid * 0.04) {
+            clearInterval(inter);
+            if (diffHasDefine == false) {
+              if (difficult == "easy") {angle = 5; speed = 0.7;};
+              if (difficult == "normal") {angle = 7; speed = 1;};
+              if (difficult == "hard") {angle = 9; speed = 1.7;};
+              diffHasDefine = true;
+            }
+            topSide(angle, speed, "bottom", "left", ball, ballStyle);
+          } else if (
+            ballX >= stick1X + sticksWid * 0.96 &&
+            ballX <= stick1X + (sticksWid + 10)
+          ) {
+            clearInterval(inter);
+            if (diffHasDefine == false) {
+              if (difficult == "easy") {angle = 5; speed = 0.7;};
+              if (difficult == "normal") {angle = 7; speed = 1;};
+              if (difficult === "hard") {angle = 9; speed = 1.7;};
+              diffHasDefine = true;
+            }
+            topSide(angle, speed, "bottom", "right", ball, ballStyle);
+          } else if (
+            ballX > stick1X + sticksWid * 0.04 &&
+            ballX <= stick1X + sticksWid * 0.06
+          ) {
+            clearInterval(inter);
+            if (diffHasDefine == false) {
+              if (difficult == "easy")  {angle = 3; speed = 0.6;};
+              if (difficult == "normal")  {angle = 5; speed = 1;};
+              if (difficult == "hard")  {angle = 7; speed = 1.7;};
+              diffHasDefine = true;
+            }
+            topSide(angle, speed, "bottom", "left", ball, ballStyle);
+          } else if (
+            ballX >= stick1X + sticksWid * 0.9 &&
+            ballX < stick1X + sticksWid * 0.96
+          ) {
+            clearInterval(inter);
+            if (diffHasDefine == false) {
+              if (difficult == "easy")  {angle = 3; speed = 0.6;};
+              if (difficult == "normal")  {angle = 5; speed = 1;};
+              if (difficult == "hard")  {angle = 7; speed = 1.7;};
+              diffHasDefine = true;
+            }
+            topSide(angle, speed, "bottom", "right", ball, ballStyle);
+          } else if (
+            ballX >= stick1X + sticksWid * 0.1 &&
+            ballX <= stick1X + sticksWid * 0.25
+          ) {
+            clearInterval(inter);
+            if (diffHasDefine == false) {
+              if (difficult == "easy") {angle = 2; speed = 1;};
+              if (difficult == "normal") {angle = 4; speed = 2;};
+              if (difficult == "hard") {angle = 6; speed = 3;};
+              diffHasDefine = true;
+            }
+            topSide(angle, speed, "bottom", "left", ball, ballStyle);
+          } else if (
+            ballX >= stick1X + sticksWid * 0.75 &&
+            ballX < stick1X + sticksWid * 0.9
+          ) {
+            clearInterval(inter);
+            if (diffHasDefine == false) {
+              if (difficult == "easy") {angle = 2; speed = 1;};
+              if (difficult == "normal") {angle = 4; speed = 2;};
+              if (difficult == "hard") {angle = 6; speed = 3;};
+              diffHasDefine = true;
+            }
+            topSide(angle, speed, "bottom", "right", ball, ballStyle);
+          } else if (
+            ballX > stick1X + sticksWid * 0.25 &&
+            ballX <= stick1X + sticksWid * 0.45
+          ) {
+            clearInterval(inter);
+            if (diffHasDefine == false) {
+              if (difficult == "easy") {angle = 2; speed = 2;};
+              if (difficult == "normal") {angle = 4; speed = 4;};
+              if (difficult == "hard") {angle = 6; speed = 6;};
+              diffHasDefine = true;
+            }
+            topSide(angle, speed, "bottom", "left", ball, ballStyle);
+          } else if (
+            ballX >= stick1X + sticksWid * 0.55 &&
+            ballX < stick1X + sticksWid * 0.75
+          ) {
+            clearInterval(inter);
+            if (diffHasDefine == false) {
+              if (difficult == "easy") {angle = 2; speed = 2;};
+              if (difficult == "normal") {angle = 4; speed = 4;};
+              if (difficult == "hard") {angle = 6; speed = 6;};
+              diffHasDefine = true;
+            }
+            topSide(angle, speed, "bottom", "right", ball, ballStyle);
+          } else if (
+            ballX >= stick1X + sticksWid * 0.45 &&
+            ballX < stick1X + sticksWid * 0.55
+          ) {
+            clearInterval(inter);
+            if (diffHasDefine == false) {
+              if (difficult == "easy") {angle = 0; speed = 3;};
+              if (difficult == "normal") {angle = 0; speed = 5;};
+              if (difficult == "hard") {angle = 0; speed = 7;};
+              diffHasDefine = true;
+
+            }
+            topSide(angle, speed, "bottom", "right", ball, ballStyle);
+          }
+        }
+      }
+
+      function bottomSide(angle, speed, lastSide, ballDir, ballEl, ballSt) {
+        inter = setInterval(() => {
+          y = getOffset(ballEl).y;
+          x = getOffset(ballEl).x;
+
+          ballMrgnTop = +ballSt.marginTop.slice(0, -2);
+          ballMrgnLeft = +ballSt.marginLeft.slice(0, -2);
+
+          if (lastSide == "top" && ballDir == "right") {
+            ballMrgnTop -= speed;
+            ballMrgnLeft += angle;
+            ballEl.style.marginTop = `${ballMrgnTop}px`;
+            ballEl.style.marginLeft = `${ballMrgnLeft}px`;
+          } else if (lastSide == "top" && ballDir == "left") {
+            ballMrgnTop -= speed;
+            ballMrgnLeft -= angle;
+            ballEl.style.marginTop = `${ballMrgnTop}px`;
+            ballEl.style.marginLeft = `${ballMrgnLeft}px`;
+          } else if (lastSide == "left") {
+            ballDir = "right";
+            ballMrgnTop -= speed;
+            ballMrgnLeft += angle;
+            ballEl.style.marginTop = `${ballMrgnTop}px`;
+            ballEl.style.marginLeft = `${ballMrgnLeft}px`;
+          } else if (lastSide == "right") {
+            ballMrgnTop -= speed;
+            ballMrgnLeft -= angle;
+            ballEl.style.marginTop = `${ballMrgnTop}px`;
+            ballEl.style.marginLeft = `${ballMrgnLeft}px`;
+          }
+
+          hitAngle(ball);
+
+          if (isAnim && x >= borderRight - 180) {
+            clearInterval(inter);
+            lastSide = "bottom";
+            rightSide(angle, speed, lastSide, ballDir, ballEl, ballSt);
+          } else if (x >= borderRight) {
+            lastSide = "bottom";
+            clearInterval(inter);
+            rightSide(angle, speed, lastSide, ballDir, ballEl, ballSt);
+          } else if (y <= borderTop) {
+            lastSide = "bottom";
+            clearInterval(inter);
+            if (startAt == "top") {
+              startAt = "bottom";
+            } else if (startAt == "bottom") {
+              startAt = "top";
+            }
+            winCountBottom++;
+            strikeAnim(countDivBottom, countBottom, winCountBottom);
+          } else if (x <= borderLeft) {
+            lastSide = "bottom";
+            clearInterval(inter);
+            leftSide(angle, speed, lastSide, ballDir, ballEl, ballSt);
+          }
+        }, 5);
+      }
+
+      function rightSide(angle, speed, lastSide, ballDir, ballEl, ballSt) {
+        const animProm = new Promise((resolve) => {
+          inter = setInterval(() => {
+            y = getOffset(ballEl).y;
+            x = getOffset(ballEl).x;
+
+            ballMrgnTop = +ballSt.marginTop.slice(0, -2);
+            ballMrgnLeft = +ballSt.marginLeft.slice(0, -2);
+
+            if (isAnim) {
+              speed = 0.5;
+            }
+
+            if (lastSide == "bottom") {
+              ballDir = "top";
+              ballMrgnTop -= speed;
+              ballMrgnLeft -= angle;
+              ballEl.style.marginTop = `${ballMrgnTop}px`;
+              ballEl.style.marginLeft = `${ballMrgnLeft}px`;
+            } else if (lastSide == "top") {
+              ballDir = "bottom";
+              ballMrgnTop += speed;
+              ballMrgnLeft -= angle;
+              ballEl.style.marginTop = `${ballMrgnTop}px`;
+              ballEl.style.marginLeft = `${ballMrgnLeft}px`;
+            } else if (lastSide == "left") {
+              if (ballDir == "bottom") {
+                ballDir = "bottom";
+                ballMrgnTop += speed;
+                ballMrgnLeft -= angle;
+                ballEl.style.marginTop = `${ballMrgnTop}px`;
+                ballEl.style.marginLeft = `${ballMrgnLeft}px`;
+              } else if (ballDir == "top") {
+                ballDir = "top";
+                ballMrgnTop -= speed;
+                ballMrgnLeft -= angle;
+                ballEl.style.marginTop = `${ballMrgnTop}px`;
+                ballEl.style.marginLeft = `${ballMrgnLeft}px`;
+              }
+            }
+
+            hitAngle(ball);
+
+            if (isAnim && x <= borderRight / 2 - 115) {
+              clearInterval(inter);
+              animBall.style.borderBottom = "solid";
+              animBall.style.borderBottomWidth = "5px";
+              document.getElementById("win1").style.display = "block";
+              resolve(true);
+            }
+
+            if (y <= borderTop) {
+              lastSide = "right";
+              clearInterval(inter);
+
+              if (startAt == "top") {
+                startAt = "bottom";
+              } else if (startAt == "bottom") {
+                startAt = "top";
+              }
+              winCountBottom++;
+              strikeAnim(countDivBottom, countBottom, winCountBottom);
+            } else if (y >= borderBottom) {
+              lastSide = "right";
+              clearInterval(inter);
+
+              if (startAt == "top") {
+                startAt = "bottom";
+              } else if (startAt == "bottom") {
+                startAt = "top";
+              }
+              winCountTop++;
+              strikeAnim(countDivTop, countTop, winCountTop);
+            } else if (x <= borderLeft) {
+              lastSide = "right";
+              clearInterval(inter);
+              leftSide(angle, speed, lastSide, ballDir, ballEl, ballSt);
+            }
+          }, 5);
+        });
+        animProm.then((response) => {
+          animEnd = response;
+        });
+      }
+
+      function topSide(angle, speed, lastSide, ballDir, ballEl, ballSt) {
+        inter = setInterval(() => {
+          y = getOffset(ballEl).y;
+          x = getOffset(ballEl).x;
+
+          ballMrgnTop = +ballSt.marginTop.slice(0, -2);
+          ballMrgnLeft = +ballSt.marginLeft.slice(0, -2);
+
+          if (lastSide == "right") {
+            ballDir = "left";
+            ballMrgnTop += speed;
+            ballMrgnLeft -= angle;
+            ballEl.style.marginTop = `${ballMrgnTop}px`;
+            ballEl.style.marginLeft = `${ballMrgnLeft}px`;
+          } else if (lastSide == "left") {
+            ballDir = "right";
+            ballMrgnTop += speed;
+            ballMrgnLeft += angle;
+            ballEl.style.marginTop = `${ballMrgnTop}px`;
+            ballEl.style.marginLeft = `${ballMrgnLeft}px`;
+          } else if (lastSide == "bottom" && ballDir == "right") {
+            ballMrgnTop += speed;
+            ballMrgnLeft += angle;
+            ballEl.style.marginTop = `${ballMrgnTop}px`;
+            ballEl.style.marginLeft = `${ballMrgnLeft}px`;
+          } else if (lastSide == "bottom" && ballDir == "left") {
+            ballMrgnTop += speed;
+            ballMrgnLeft -= angle;
+            ballEl.style.marginTop = `${ballMrgnTop}px`;
+            ballEl.style.marginLeft = `${ballMrgnLeft}px`;
+          } else {
+            ballMrgnTop += speed;
+            ballMrgnLeft -= angle;
+            ballEl.style.marginTop = `${ballMrgnTop}px`;
+            ballEl.style.marginLeft = `${ballMrgnLeft}px`;
+          }
+
+          hitAngle(ball);
+
+          if (x <= borderLeft) {
+            lastSide = "top";
+            clearInterval(inter);
+            leftSide(angle, speed, lastSide, ballDir, ballEl, ballSt);
+          } else if (x >= borderRight) {
+            lastSide = "top";
+            clearInterval(inter);
+            rightSide(angle, speed, lastSide, ballDir, ballEl, ballSt);
+          } else if (y >= borderBottom) {
+            lastSide = "top";
+            clearInterval(inter);
+
+            if (startAt == "top") {
+              startAt = "bottom";
+            } else if (startAt == "bottom") {
+              startAt = "top";
+            }
+            winCountTop++;
+            strikeAnim(countDivTop, countTop, winCountTop);
+          }
+        }, 5);
+      }
+
+      function leftSide(angle, speed, lastSide, ballDir, ballEl, ballSt) {
+        inter = setInterval(() => {
+          y = getOffset(ballEl).y;
+          x = getOffset(ballEl).x;
+
+          ballMrgnTop = +ballSt.marginTop.slice(0, -2);
+          ballMrgnLeft = +ballSt.marginLeft.slice(0, -2);
+
+          if (lastSide == "top") {
+            ballDir = "bottom";
+            ballMrgnTop += speed;
+            ballMrgnLeft += angle;
+            ballEl.style.marginTop = `${ballMrgnTop}px`;
+            ballEl.style.marginLeft = `${ballMrgnLeft}px`;
+          } else if (lastSide == "bottom") {
+            ballDir = "top";
+            ballMrgnTop -= speed;
+            ballMrgnLeft += angle;
+            ballEl.style.marginTop = `${ballMrgnTop}px`;
+            ballEl.style.marginLeft = `${ballMrgnLeft}px`;
+          } else if (lastSide == "right") {
+            if (ballDir == "top") {
+              ballDir = "top";
+              ballMrgnTop -= speed;
+              ballMrgnLeft += angle;
+              ballEl.style.marginTop = `${ballMrgnTop}px`;
+              ballEl.style.marginLeft = `${ballMrgnLeft}px`;
+            } else if (ballDir == "bottom") {
+              ballDir = "bottom";
+              ballMrgnTop += speed;
+              ballMrgnLeft += angle;
+              ballEl.style.marginTop = `${ballMrgnTop}px`;
+              ballEl.style.marginLeft = `${ballMrgnLeft}px`;
+            }
+          }
+
+          hitAngle(ball);
+
+          if (isAnim && y >= borderBottom - 165) {
+            clearInterval(inter);
+            lastSide = "left";
+            bottomSide(angle, speed, lastSide, ballDir, ballEl, ballSt);
+          } else if (y >= borderBottom) {
+            lastSide = "left";
+            clearInterval(inter);
+
+            if (startAt == "top") {
+              startAt = "bottom";
+            } else if (startAt == "bottom") {
+              startAt = "top";
+            }
+            winCountTop++;
+            strikeAnim(countDivTop, countTop, winCountTop);
+          } else if (y <= borderTop) {
+            lastSide = "left";
+            clearInterval(inter);
+
+            if (startAt == "top") {
+              startAt = "bottom";
+            } else if (startAt == "bottom") {
+              startAt = "top";
+            }
+            winCountBottom++;
+            strikeAnim(countDivBottom, countBottom, winCountBottom);
+          } else if (x >= borderRight) {
+            lastSide = "left";
+            clearInterval(inter);
+            rightSide(angle, speed, lastSide, ballDir, ballEl, ballSt);
+          }
+        }, 5);
+      }
+
+      function stickMove(ballEl) {
+        let once1 = false;
+        let once2 = false;
+        let once3 = false;
+        let once4 = false;
+
+        document.onkeydown = (event) => {
+          if (stroke == false) {
+            let key = event.which || event.keyCode;
+
+            if (key == 39 && once1 == false) {
+              clearInterval(inter37);
+              once1 = true;
+              inter39 = setInterval(() => {
+                stick1MrgnLeft += 4;
+                stick1.style.marginLeft = `${stick1MrgnLeft}px`;
+                // ignore-prettier
+                if (
+                  gameStart == true &&
+                  startAt == "top" &&
+                  ballLaunched == false
+                ) {
+                  ballMrgnLeft += 4;
+                  ballEl.style.marginLeft = `${ballMrgnLeft}px`;
+                }
+
+                let x = getOffset(stick1).x;
+                if (x >= 900 - sticksWid) {
+                  clearInterval(inter39);
+                }
+              }, 5);
+            }
+
+            if (key == 37 && once2 == false) {
+              clearInterval(inter39);
+              once2 = true;
+              inter37 = setInterval(() => {
+                stick1MrgnLeft -= 4;
+                stick1.style.marginLeft = `${stick1MrgnLeft}px`;
+                // ignore-prettier
+                if (
+                  gameStart == true &&
+                  startAt == "top" &&
+                  ballLaunched == false
+                ) {
+                  ballMrgnLeft -= 4;
+                  ballEl.style.marginLeft = `${ballMrgnLeft}px`;
+                }
+
+                let x = getOffset(stick1).x;
+                if (x <= 10) {
+                  clearInterval(inter37);
+                }
+              }, 5);
+            }
+
+            if (key == 68 && once3 == false) {
+              clearInterval(inter65);
+              once3 = true;
+              inter68 = setInterval(() => {
+                stick2MrgnLeft += 4;
+                stick2.style.marginLeft = `${stick2MrgnLeft}px`;
+                // ignore-prettier
+                if (
+                  gameStart == true &&
+                  startAt == "bottom" &&
+                  ballLaunched == false
+                ) {
+                  ballMrgnLeft += 4;
+                  ballEl.style.marginLeft = `${ballMrgnLeft}px`;
+                }
+
+                let x = getOffset(stick2).x;
+                if (x >= 900 - sticksWid) {
+                  clearInterval(inter68);
+                }
+              }, 5);
+            }
+
+            if (key == 65 && once4 == false) {
+              clearInterval(inter68);
+              once4 = true;
+              inter65 = setInterval(() => {
+                stick2MrgnLeft -= 4;
+                stick2.style.marginLeft = `${stick2MrgnLeft}px`;
+                // ignore-prettier
+                if (
+                  gameStart == true &&
+                  startAt == "bottom" &&
+                  ballLaunched == false
+                ) {
+                  ballMrgnLeft -= 4;
+                  ballEl.style.marginLeft = `${ballMrgnLeft}px`;
+                }
+
+                let x = getOffset(stick2).x;
+                if (x <= 10) {
+                  clearInterval(inter65);
+                }
+              }, 5);
+            }
+
+            if (key == 32) {
+              if (startAt == "top" && ballLaunched == false) {
+                ballLaunched = true;
+                topSide(0, 4, "bottom", "right", ball, ballStyle);
+                document.getElementById("win5").style.display = "none";
+                strikeWin.style.display = "none";
+              } else if (startAt == "bottom" && ballLaunched == false) {
+                ballLaunched = true;
+                bottomSide(0, 4, "top", "right", ball, ballStyle);
+                document.getElementById("win5").style.display = "none";
+                strikeWin.style.display = "none";
+              }
+            }
+
+            document.onkeyup = (event) => {
+              let key = event.which || event.keyCode;
+              if (key == 39) {
+                clearInterval(inter39);
+                once1 = false;
+              } else if (key == 37) {
+                clearInterval(inter37);
+                once2 = false;
+              } else if (key == 68) {
+                clearInterval(inter68);
+                once3 = false;
+              } else if (key == 65) {
+                clearInterval(inter65);
+                once4 = false;
+              }
+            };
+          }
+        };
+        document.onkeyup = (event) => {
+          let key = event.which || event.keyCode;
+          if (key == 39) {
+            clearInterval(inter39);
+            once1 = false;
+          } else if (key == 37) {
+            clearInterval(inter37);
+            once2 = false;
+          } else if (key == 68) {
+            clearInterval(inter68);
+            once3 = false;
+          } else if (key == 65) {
+            clearInterval(inter65);
+            once4 = false;
+          }
+        };
+      }
+
+      function getOffset(el) {
+        const rect = el.getBoundingClientRect();
+        return {
+          x: rect.left + window.scrollX,
+          y: rect.top + window.scrollY,
+        };
+      }
+    </script>
+  </body>
+</html>

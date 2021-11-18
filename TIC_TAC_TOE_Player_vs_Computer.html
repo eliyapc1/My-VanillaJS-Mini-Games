@@ -1,0 +1,469 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Tic-Tac-Toe</title>
+    <style>
+      #container {
+        padding-top: 5%;
+      }
+      #container #main {
+        background-color: rgb(247, 247, 247);
+        margin: auto;
+      }
+      #container #main tr td {
+        width: 100px;
+        height: 100px;
+        text-align: center;
+        font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
+          Oxygen, Ubuntu, Cantarell, "Open Sans", "Helvetica Neue", sans-serif;
+        font-weight: 200;
+        font-size: 50px;
+        color: rgb(70, 70, 70);
+      }
+      h1 {
+        text-align: center;
+        font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
+          Oxygen, Ubuntu, Cantarell, "Open Sans", "Helvetica Neue", sans-serif;
+        font-weight: 200;
+        font-size: 28px;
+        color: rgb(73, 73, 73);
+      }
+      select {
+        width: 100px;
+        height: 50px;
+        font-size: large;
+        text-align-last: center;
+        font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
+          Oxygen, Ubuntu, Cantarell, "Open Sans", "Helvetica Neue", sans-serif;
+      }
+      #tryAg {
+        width: 110px;
+        height: 40px;
+        margin: auto;
+        font-size: 22px;
+        font-weight: 300;
+        text-align-last: center;
+        font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
+          Oxygen, Ubuntu, Cantarell, "Open Sans", "Helvetica Neue", sans-serif;
+      }
+    </style>
+  </head>
+
+  <body>
+    <div id="container">
+      <h1 style="padding-bottom: 30px">Tic-Tac-Toe</h1>
+
+      <table id="main" border="1">
+        <tr>
+          <td id="box1"></td>
+          <td id="box2"></td>
+          <td id="box3"></td>
+        </tr>
+        <tr>
+          <td id="box4"></td>
+          <td id="box5"></td>
+          <td id="box6"></td>
+        </tr>
+        <tr>
+          <td id="box7"></td>
+          <td id="box8"></td>
+          <td id="box9"></td>
+        </tr>
+      </table>
+
+      <div id="div1" style="text-align: center; padding-top: 30px">
+        <select id="sel" onchange="selection(),setTimeout(startNote, 500)">
+          <option value="" selected disabled>Select</option>
+          <option value="X">X</option>
+          <option value="O">O</option>
+        </select>
+        <h1 id="chooseNote"></h1>
+        <h1 id="stNote" style="font-size: 34px"></h1>
+        <input type ="button" id="tryAg" style="display: none;"/>
+      </div>
+    </div>
+
+    <script>
+      let chNote = document.getElementById("chooseNote");
+      let userSignSel = "";
+      let compSignSel = "";
+
+      function selection() {
+        // Hide select shape menu.
+        const selMenu = document.getElementById("sel");
+        selMenu.style.display = "none";
+        // User selection announcement.
+        chNote.innerHTML = `You chose ${sel.value}`;
+        userSignSel = sel.value;
+        userSignSel == "X" ? (compSignSel = "O") : (compSignSel = "X");
+      }
+
+      function startNote() {
+        document.getElementById("stNote").innerHTML = "Let's Start!";
+      }
+
+      let userBoxSel = "";
+      let compBoxSel = "";
+      const userBoxSelArr = [];
+      const compBoxSelArr = [];
+      const selBoxArr = [];
+      let note = document.getElementById("stNote");
+
+      // Boxes background-color changes on mouse actions (movement & click).
+      for (let i = 1; i <= 9; i++) {
+        let tdBox = document.getElementById(`box${i}`);
+        tdBox.onmouseover = function () {
+          tdBox.style.backgroundColor = "rgb(227, 227, 227)";
+        };
+        tdBox.onmouseout = function () {
+          tdBox.style.backgroundColor = "";
+        };
+        tdBox.onmousedown = function () {
+          tdBox.style.backgroundColor = "white";
+        };
+        tdBox.onmouseup = function () {
+          tdBox.style.backgroundColor = "rgb(227, 227, 227)";
+        };
+
+        tdBox.onclick = function () {
+          if (userSignSel == "") {
+            note.innerHTML = "Select a shape first";
+          } else if (isAllowed(tdBox)) {
+            note.innerHTML = "";
+            tdBox.innerHTML = userSignSel;
+            userBoxSel = `box${i}`;
+            selBoxArr.push(userBoxSel);
+            userBoxSelArr.push(userBoxSel);
+
+            if (isWin(userBoxSelArr)) {
+              note.innerHTML = "You Won!";
+              chNote.innerHTML = "Congratulation!";
+              tryAgain();
+              return;
+            }
+
+            if (!firstRoundPass) {
+              firstRound();
+              return;
+            }
+            smartAttack();
+            gameOverAnnounce();
+            if (!canAttack) {
+              smartDefense();
+              gameOverAnnounce();
+              isWin(userBoxSelArr);
+              if (!canDefense && firstRoundPass) {
+                console.log("FIRST ROUND PASS", firstRoundPass);
+                console.log("CAN DEFENSE", canDefense);
+                smartAttOne();
+                gameOverAnnounce();
+                return;
+              }
+            }
+
+            /*
+            if (!isAllSel(selBoxArr)) {
+              while (true) {
+                let boxNum = Math.floor(Math.random() * 10) + 1;
+                compBoxSel = `box${boxNum}`;
+                if (selBoxArr.includes(compBoxSel) || boxNum == 10) {
+                  continue;
+                } else {
+                  document.getElementById(`box${boxNum}`).innerHTML =
+                    compSignSel;
+                  selBoxArr.push(compBoxSel);
+                  compBoxSelArr.push(compBoxSel);
+                  if (isWin(compBoxSelArr)) {
+                    note.innerHTML = "You Lost!";
+                    chNote.innerHTML = "GAME-OVER";
+                    tryAgain();
+                    return;
+                  }
+                  break;
+                }
+              }
+            } else if (!isWin(compBoxSelArr) && !isWin(userBoxSelArr)) {
+              note.innerHTML = "TEKO!";
+              tryAgain();
+            }
+            */
+          }
+        };
+      }
+
+      function gameOverAnnounce() {
+        allBoxes;
+        if (isWin(compBoxSelArr)) {
+          note.innerHTML = "You Lost!";
+          chNote.innerHTML = "GAME-OVER";
+          return;
+        } else if (isAllSel()) {
+          note.innerHTML = "TEKO!";
+          chNote.innerHTML = "Don't give up!";
+          tryAgain();
+          return;
+        }
+      }
+
+      function smartAttOne() {
+        for (const pos of winPos) {
+          let counter = 0;
+          let optToChoose = null;
+          for (let i = 0; i < 3; i++) {
+            if (compBoxSelArr.includes(pos[i])) {
+              counter++;
+            } else {
+              optToChoose = pos[i];
+            }
+          }
+          if (counter == 1 && !selBoxArr.includes(optToChoose)) {
+            if (selBoxArr.includes(optToChoose)) {
+              break;
+            } else {
+              compBoxSel = optToChoose;
+              compBoxSelArr.push(compBoxSel);
+              selBoxArr.push(compBoxSel);
+              document.getElementById(compBoxSel).innerHTML = compSignSel;
+              return;
+            }
+          } else {
+            continue;
+          }
+        }
+      }
+
+      const cornerBoxes = ["box1", "box3", "box7", "box9"];
+      const sideBoxes = ["box2", "box4", "box6", "box8", "box5"];
+      let firstRoundPass = false;
+      function firstRound() {
+        for (const sideBox of sideBoxes) {
+          if (userBoxSel == sideBox) {
+            index = Math.floor(Math.random() * 4);
+            compBoxSel = cornerBoxes[index];
+            compBoxSelArr.push(compBoxSel);
+            selBoxArr.push(compBoxSel);
+            document.getElementById(compBoxSel).innerHTML = compSignSel;
+            return (firstRoundPass = true);
+          }
+        }
+        for (const box of cornerBoxes) {
+          if (userBoxSel == box) {
+            compBoxSel = "box5";
+            compBoxSelArr.push(compBoxSel);
+            selBoxArr.push(compBoxSel);
+            document.getElementById(compBoxSel).innerHTML = compSignSel;
+            return (firstRoundPass = true);
+          }
+        }
+      }
+
+      let canDefense = null;
+      function smartDefense() {
+        canDefense = false;
+        for (const pos of winPos) {
+          let counter = 0;
+          let optToChoose = null;
+          for (let i = 0; i < 3; i++) {
+            if (userBoxSelArr.includes(pos[i])) {
+              counter++;
+            } else {
+              optToChoose = pos[i];
+            }
+          }
+          if (counter == 2 && !selBoxArr.includes(optToChoose)) {
+            if (selBoxArr.includes(optToChoose)) {
+              break;
+            } else {
+              compBoxSel = optToChoose;
+              compBoxSelArr.push(compBoxSel);
+              selBoxArr.push(compBoxSel);
+              document.getElementById(compBoxSel).innerHTML = compSignSel;
+              return (canDefense = true);
+            }
+          } else {
+            continue;
+          }
+        }
+      }
+
+      let canAttack = null;
+      function smartAttack() {
+        canAttack = false;
+        for (const pos of winPos) {
+          let counter = 0;
+          let optToChoose = null;
+          for (let i = 0; i < 3; i++) {
+            if (compBoxSelArr.includes(pos[i])) {
+              counter++;
+            } else {
+              optToChoose = pos[i];
+            }
+          }
+          if (counter == 2 && !selBoxArr.includes(optToChoose)) {
+            if (selBoxArr.includes(optToChoose)) {
+              break;
+            } else {
+              compBoxSel = optToChoose;
+              compBoxSelArr.push(compBoxSel);
+              selBoxArr.push(compBoxSel);
+              document.getElementById(compBoxSel).innerHTML = compSignSel;
+              return (canAttack = true);
+            }
+          } else {
+            continue;
+          }
+        }
+      }
+
+      /*
+       else if (counter == 1 && !selBoxArr.includes(optToChoose)) {
+            console.log("COUNTER = 1");
+            compBoxSel = optToChoose;
+            compBoxSelArr.push(compBoxSel);
+            selBoxArr.push(compBoxSel);
+            document.getElementById(compBoxSel).innerHTML = compSignSel;
+            return;
+          }
+      */
+
+      let x = 0;
+      function randomSel() {
+        for (x = 0; x < 1; x++) {
+          console.log("CCC");
+          let boxNum = Math.floor(Math.random() * 10) + 1;
+          compBoxSel = `box${boxNum}`;
+          console.log("boxNum", boxNum);
+          if (selBoxArr.includes(compBoxSel) || boxNum == 10) {
+            continue;
+          } else {
+            document.getElementById(`box${boxNum}`).innerHTML = compSignSel;
+            selBoxArr.push(compBoxSel);
+            compBoxSelArr.push(compBoxSel);
+            break;
+          }
+        }
+      }
+      /*else if (globalCount == 1) {
+            while (true) {
+              let boxNum = Math.floor(Math.random() * 10) + 1;
+              compBoxSel = `box${boxNum}`;
+              if (selBoxArr.includes(compBoxSel) || boxNum == 10) {
+                continue;
+              } else {
+                document.getElementById(`box${boxNum}`).innerHTML = compSignSel;
+                selBoxArr.push(compBoxSel);
+                compBoxSelArr.push(compBoxSel);
+                return;
+              }
+            }
+          }
+          */
+
+      // all possible boxes
+      const allBoxes = [];
+      for (let i = 1; i <= 9; i++) {
+        allBoxes.push(`box${i}`);
+      }
+
+      //Checks if all boxes have been selected.
+      function isAllSel() {
+        let count = 0;
+        for (const box of allBoxes) {
+          if (selBoxArr.includes(box)) {
+            count++;
+          }
+        }
+        return count === 9 ? true : false;
+      }
+
+      // 7 Possibilities to win:
+      const winPos = [
+        ["box1", "box2", "box3"],
+        ["box4", "box5", "box6"],
+        ["box7", "box8", "box9"],
+
+        ["box1", "box4", "box7"],
+        ["box2", "box5", "box8"],
+        ["box3", "box6", "box9"],
+
+        ["box1", "box5", "box9"],
+        ["box3", "box5", "box7"],
+      ];
+
+      // Checks if win/loose:
+      function isWin(userOrCompBoxSelArr) {
+        for (let i = 0; i < winPos.length; i++) {
+          let count = 0;
+          const winArr = [];
+          for (let j = 0; j < 3; j++) {
+            if (userOrCompBoxSelArr.includes(winPos[i][j]) === true) {
+              count += 1;
+              winArr.push(winPos[i][j]);
+              if (count === 3) {
+                winCol(winArr);
+                tryAgain();
+                return true;
+              }
+            }
+          }
+        }
+      }
+      // Confirm allowed choice
+      function isAllowed(tdBox) {
+        if (
+          tdBox.innerHTML === compSignSel ||
+          tdBox.innerHTML === userSignSel
+        ) {
+          note.innerHTML = "Box has already signed!";
+          setTimeout(() => (note.innerHTML = ""), 1200);
+          return false;
+        } else {
+          return true;
+        }
+      }
+      // Winning color show
+      function winCol(winArr) {
+        // Disable clicking after win or loose.
+        for (let i = 1; i < 10; i++) {
+          document.getElementById(`box${i}`).onclick = "";
+        }
+        for (let i = 0; i < 3; i++) {
+          document.getElementById(winArr[i]).style.backgroundColor = "#46FDD8";
+          document.getElementById(winArr[i]).onmousedown = "";
+          document.getElementById(winArr[i]).onmouseover = "";
+          document.getElementById(winArr[i]).onmouseout = "";
+          document.getElementById(winArr[i]).onmouseup = "";
+        }
+
+        let curColor = "";
+        setInterval(() => {
+          if (curColor != "#C3FD46") {
+            curColor = "#C3FD46";
+            for (let i = 0; i < 3; i++) {
+              document.getElementById(winArr[i]).style.backgroundColor =
+                curColor;
+            }
+          } else {
+            for (let i = 0; i < 3; i++) {
+              curColor = "#46FDD8";
+              document.getElementById(winArr[i]).style.backgroundColor =
+                curColor;
+            }
+          }
+        }, 100);
+      }
+
+      function tryAgain() {
+        setTimeout(() => {
+          let tryAgBut = document.getElementById("tryAg");
+          tryAgBut.style.display = 'block';
+          tryAgBut.onclick = () => document.location.reload(true);
+          tryAgBut.value = "Try Again";
+        }, 1200);
+      }
+    </script>
+  </body>
+</html>

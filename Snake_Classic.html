@@ -1,0 +1,774 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Snake</title>
+    <style>
+      body {
+        background-color: rgb(255, 255, 255);
+        display: flex;
+        justify-content: center;
+      }
+      h1 {
+        font-family: monospace;
+        font-weight: 500;
+        font-size: 42px;
+        color: #ff4a4a;
+        margin: auto;
+        text-align: center;
+        padding-bottom: 1%;
+        padding-top: 1%;
+      }
+      #snake-title {
+        font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
+          Oxygen, Ubuntu, Cantarell, "Open Sans", "Helvetica Neue", sans-serif;
+        font-weight: bold;
+        font-size: 42px;
+        color: #ff2525;
+        margin: auto;
+        text-align: center;
+        position: absolute;
+        top: 2.5%;
+        left: 0;
+        right: 0;
+        width: fit-content;
+        height: fit-content;
+        padding-top: 0;
+        padding-bottom: 0;
+      }
+      #container {
+        margin-top: 2%;
+        width: 800px;
+        height: 800px;
+      }
+
+      table {
+        margin: auto;
+        border-collapse: collapse;
+        border-radius: 25px;
+        background-color: #aaff80;
+      }
+
+      td {
+        width: 70px;
+        height: 70px;
+        border-collapse: collapse;
+
+        border-bottom-left-radius: 15px;
+        border-top-left-radius: 15px;
+        border-bottom-right-radius: 15px;
+        border-top-right-radius: 15px;
+      }
+
+      #keyLis {
+        width: 50px;
+        margin: auto;
+        display: block;
+        text-align: center;
+        font-size: 12;
+        border: 5px solid #7ef145;
+        border-radius: 25px;
+        background-color: #aaff80;
+      }
+
+      #container2 {
+        margin-left: auto;
+        margin-right: auto;
+        position: absolute;
+        top: 40%;
+        left: 0;
+        right: 0;
+        width: fit-content;
+        height: fit-content;
+        padding-top: 0;
+        padding-bottom: 0;
+        display: none;
+      }
+
+      #end {
+        font-family: monospace;
+        font-size: 48px;
+        font-weight: 500;
+        color: #ac65ff;
+        font-weight: 600;
+        background-color: #ffffff;
+        padding-left: 15px;
+        padding-right: 15px;
+        border-top-left-radius: 15px;
+        border-top-right-radius: 15px;
+      }
+
+      #tryAgainBtn {
+        width: 350px;
+        border: none;
+        margin: auto;
+        padding: 15px;
+        font-size: 22px;
+        font-family: monospace;
+        font-weight: 400;
+        color: #ff4a4a;
+        background-color: #2e2e2e;
+        border-bottom-left-radius: 15px;
+        border-bottom-right-radius: 15px;
+      }
+
+      .snake {
+        transition: transform 1s;
+        display: inline-block;
+      }
+
+      #your-score {
+        color: #292929;
+        font-family: "Trebuchet MS", "Lucida Sans Unicode", "Lucida Grande",
+          "Lucida Sans", Arial, sans-serif;
+        font-size: 36px;
+        text-align: left;
+      }
+      #score-num {
+        font-family: Arial, Helvetica, sans-serif;
+        font-size: 42px;
+        font-weight: 800;
+
+        transition: transform 500ms, color 500ms;
+        display: inline-block;
+      }
+
+      #start-div {
+        display: flex;
+        justify-content: center;
+        position: absolute;
+        margin: auto;
+        top: 0;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        width: 500px;
+        height: 150px;
+        background-color: transparent;
+      }
+      #start-content {
+        text-align: center;
+      }
+      #start-content span {
+        font-family: "Trebuchet MS", "Lucida Sans Unicode", "Lucida Grande",
+          "Lucida Sans", Arial, sans-serif;
+        font-size: 28px;
+      }
+      #enter {
+        font-size: 36px;
+        font-family: "Trebuchet MS", "Lucida Sans Unicode", "Lucida Grande",
+          "Lucida Sans", Arial, sans-serif;
+        transition: transform 1s;
+      }
+      #enter-key {
+        transition: transform 500ms, color 500ms;
+        display: inline-block;
+      }
+    </style>
+  </head>
+
+  <body>
+    <div id="snake-title">
+      <div class="snake" id="s">S</div>
+      <div class="snake" id="n">N</div>
+      <div class="snake" id="a">A</div>
+      <div class="snake" id="k">K</div>
+      <div class="snake" id="e">E</div>
+    </div>
+
+    <div id="container">
+      <div id="start-div">
+        <div id="start-content">
+          <span
+            >Move with
+            <span style="font-size: 25px; font-weight: bold"
+              >ARROWS-KEY</span
+            ></span
+          >
+          <br /><span
+            >Pause with
+            <span style="font-size: 25px; font-weight: bold">SPACE </span></span
+          >
+          <span style="font-size: 23px">(move to Resume)</span> <br />
+          <h2 id="enter">Press <span id="enter-key">ENTER</span> to start!</h2>
+        </div>
+      </div>
+      <div id="score">
+        <h1 id="your-score">Score: <span id="score-num">0</span></h1>
+      </div>
+      <!-- 11 * 11 = 121 cells -->
+      <table id="mainTab">
+        <tr>
+          <td id="td1"></td>
+          <td></td>
+          <td></td>
+          <td></td>
+          <td></td>
+          <td></td>
+          <td></td>
+          <td></td>
+          <td></td>
+          <td></td>
+          <td></td>
+        </tr>
+        <tr>
+          <td></td>
+          <td></td>
+          <td></td>
+          <td></td>
+          <td></td>
+          <td></td>
+          <td></td>
+          <td></td>
+          <td></td>
+          <td></td>
+          <td></td>
+        </tr>
+        <tr>
+          <td></td>
+          <td></td>
+          <td></td>
+          <td></td>
+          <td></td>
+          <td></td>
+          <td></td>
+          <td></td>
+          <td></td>
+          <td></td>
+          <td></td>
+        </tr>
+        <tr>
+          <td></td>
+          <td></td>
+          <td></td>
+          <td></td>
+          <td></td>
+          <td></td>
+          <td></td>
+          <td></td>
+          <td></td>
+          <td></td>
+          <td></td>
+        </tr>
+        <tr>
+          <td></td>
+          <td></td>
+          <td></td>
+          <td></td>
+          <td></td>
+          <td></td>
+          <td></td>
+          <td></td>
+          <td></td>
+          <td></td>
+          <td></td>
+        </tr>
+        <tr>
+          <td></td>
+          <td></td>
+          <td></td>
+          <td></td>
+          <td></td>
+          <td></td>
+          <td></td>
+          <td></td>
+          <td></td>
+          <td></td>
+          <td></td>
+        </tr>
+        <tr>
+          <td></td>
+          <td></td>
+          <td></td>
+          <td></td>
+          <td></td>
+          <td></td>
+          <td></td>
+          <td></td>
+          <td></td>
+          <td></td>
+          <td></td>
+        </tr>
+        <tr>
+          <td></td>
+          <td></td>
+          <td></td>
+          <td></td>
+          <td></td>
+          <td></td>
+          <td></td>
+          <td></td>
+          <td></td>
+          <td></td>
+          <td></td>
+        </tr>
+        <tr>
+          <td></td>
+          <td></td>
+          <td></td>
+          <td></td>
+          <td></td>
+          <td></td>
+          <td></td>
+          <td></td>
+          <td></td>
+          <td></td>
+          <td></td>
+        </tr>
+        <tr>
+          <td></td>
+          <td></td>
+          <td></td>
+          <td></td>
+          <td></td>
+          <td></td>
+          <td></td>
+          <td></td>
+          <td></td>
+          <td></td>
+          <td></td>
+        </tr>
+        <tr>
+          <td></td>
+          <td></td>
+          <td></td>
+          <td></td>
+          <td></td>
+          <td></td>
+          <td></td>
+          <td></td>
+          <td></td>
+          <td></td>
+          <td></td>
+        </tr>
+      </table>
+    </div>
+
+    <div id="container2">
+      <h1 id="end">GAME-OVER</h1>
+      <input
+        id="tryAgainBtn"
+        type="button"
+        value="Click to try again!"
+        onmouseover="tryAgBtn()"
+      />
+    </div>
+
+    <script>
+      snakeTitleAnim();
+      enterKeyAnim();
+
+      // Sets IDs to all td elements.
+      let td = document.getElementById("mainTab").getElementsByTagName("td");
+      for (let i = 0; i < 121; i++) {
+        td[i].id = `box${i + 1}`;
+      }
+      // ALL GLOBAL VARIABLES:
+      var key = null;
+      // Current snake's head position.
+      let curPos = 61;
+      let cantTurn = null;
+      let gameStart = false;
+      let inter = null;
+      let fruitsPosArr = [];
+      let fruitHasGen = false;
+      let snakeLen = 1;
+
+      let scoreNum = document.getElementById("score-num");
+
+      const snakeColor = "#FF4A4A";
+      const backgrColor = "#AAFF80";
+      const fruitColor = "#AC65FF";
+
+      // Contains the current positions of all snake body links.
+      const snakeBody = [];
+      for (let i = 0; i < snakeLen + 1; i++) {
+        snakeBody.push(curPos);
+      }
+
+      // Key press event listener
+      // Contains the key-code value of the pressed key.
+      document.onkeydown = (event) => {
+        key = event.keyCode || event.which;
+
+        // The main function which incorporates all program's major functions.
+        main();
+      };
+
+      function main() {
+        // Start game by pressing 'Enter' key.
+        if (key == 13 && gameStart == false) {
+          document.getElementById('start-div').style.display = 'none';
+          // Snake's starting position in center.
+          curPos = 61;
+          document.getElementById(`box${curPos}`).style.backgroundColor =
+            snakeColor;
+          gameStart = "true";
+        }
+        // Pause game by pressing 'Space' button.
+        if (key == 32) {
+          clearInterval(inter);
+        }
+
+        // Navigate up with 'Arrow Up' button in the following conditions:
+        // 1. Game has already started.
+        // 2. The received key-code is 38 (which is Arrow-Up key).
+        // 3. Variable cantTurn isn't contain 'up', if so,
+        // it means that the current snake direction is down.
+        if (gameStart && key == 38 && cantTurn != "up") {
+          // Kills last snake's navigation animation.
+          clearInterval(inter);
+
+          // Prevent snake from turn on his back (to avoid strike), by reassign cantTurn variable
+          // = 'down' to prevent snake from turning down.
+          preventBackward();
+
+          // Starts current snake movement direction animation.
+          // For immediate movement, right after pressing the key, moveUp() is first called,
+          // and than after 300ms the animation will continue the snake movement.
+          moveUp();
+          inter = setInterval(moveUp, 300);
+
+          // Checks if all fruits have been eaten (or not generated for the first time)
+          // and didn't re-generated.
+          if (fruitsPosArr.length == 0 && fruitHasGen == false) {
+            fruitHasGen = true;
+            setTimeout(fruitGen, 2000);
+          }
+        }
+
+        // Navigate down with 'Arrow Down' button.
+        //* Functioning as above *
+        if (gameStart && key == 40 && cantTurn != "down") {
+          preventBackward();
+          clearInterval(inter);
+          moveDown();
+          inter = setInterval(moveDown, 300);
+          if (fruitsPosArr.length == 0 && fruitHasGen == false) {
+            fruitHasGen = true;
+            setTimeout(fruitGen, 2000);
+          }
+        }
+
+        // Navigate right with 'Arrow Right' button.
+        //* Functioning as above *
+        if (gameStart && key == 39 && cantTurn != "right") {
+          preventBackward();
+          // cant = 'left';
+          clearInterval(inter);
+          moveRight();
+          inter = setInterval(moveRight, 300);
+          if (fruitsPosArr.length == 0 && fruitHasGen == false) {
+            fruitHasGen = true;
+            setTimeout(fruitGen, 2000);
+          }
+        }
+
+        // Navigate left with 'Arrow Left' button.
+        // * Functioning as above *
+        if (gameStart && key == 37 && cantTurn != "left") {
+          preventBackward();
+          clearInterval(inter);
+          moveLeft();
+          inter = setInterval(moveLeft, 300);
+          if (fruitsPosArr.length == 0 && fruitHasGen == false) {
+            fruitHasGen = true;
+            setTimeout(fruitGen, 2000);
+          }
+        }
+      }
+
+      function moveUp() {
+        console.log(snakeBody);
+        /* The function is relocates the curPos and lastPos to the next box,
+        in case of move up, curPos is subtracted by 11.*/
+        lastPos = curPos;
+        curPos -= 11;
+
+        // In case the snake has cross the field's border, curPos is jumped to the opposite border.
+        if (Math.sign(curPos) == -1 || curPos == 0) {
+          curPos += 121;
+        }
+
+        // Responsible for fruit eating.
+        fruitEaten();
+
+        // Responsible to expand the snake visible length after eating a fruit.
+        newGrowth();
+
+        // Responsible for game-ending.
+        // In case checkIfLoose returns true, all player interaction is shut-down.
+        if (checkIfLoose()) {
+          clearInterval(inter);
+        }
+      }
+
+      function moveDown() {
+        console.log(snakeBody);
+        if (snakeLen == 1) {
+          lastPos = curPos;
+        }
+        curPos += 11;
+        if (curPos >= 122) {
+          curPos -= 121;
+        }
+        fruitEaten();
+        newGrowth();
+        if (checkIfLoose()) {
+          clearInterval(inter);
+        }
+      }
+
+      function moveRight() {
+        console.log(snakeBody);
+        if (snakeLen == 1) {
+          lastPos = curPos;
+        }
+        if (curPos % 11 == 0) {
+          for (let num = 11; num <= 122; num += 11) {
+            if (curPos == num) {
+              curPos -= 10;
+              break;
+            }
+          }
+        } else {
+          curPos++;
+        }
+        fruitEaten();
+        newGrowth();
+        if (checkIfLoose()) {
+          clearInterval(inter);
+        }
+      }
+
+      function moveLeft() {
+        console.log(snakeBody);
+        if (snakeLen == 1) {
+          lastPos = curPos;
+        }
+        for (let num = 1; num <= 111; num += 11) {
+          if (curPos == num) {
+            curPos += 11;
+            break;
+          }
+        }
+        curPos--;
+
+        fruitEaten();
+        newGrowth();
+        if (checkIfLoose()) {
+          clearInterval(inter);
+        }
+      }
+
+      function preventBackward() {
+        // Contains the opposite side of each direction and
+        // continuously re-assign it, depends of the the current snake direction.
+        switch (key) {
+          case 38:
+            cantTurn = "down";
+            break;
+          case 40:
+            cantTurn = "up";
+            break;
+          case 39:
+            cantTurn = "left";
+            break;
+          case 37:
+            cantTurn = "right";
+            break;
+          default:
+            break;
+        }
+      }
+      // Generates 0 to 5 fruits (less than 3 fruits is not probable but can possibly occur).
+      function fruitGen() {
+        for (let i = 0; i <= 4; i++) {
+          let randBox = Math.floor(Math.random() * (121 - 1 + 1)) + 1;
+          /*
+      Avoid generate fruit in the following cases:
+      1. Fruit position is equal to snake position.
+      2. Fruit position has already generate (duplicated position).
+      */
+          if (!snakeBody.includes(randBox) && !fruitsPosArr.includes(randBox)) {
+            document.getElementById(`box${randBox}`).style.backgroundColor =
+              fruitColor;
+            fruitsPosArr.push(randBox);
+          } else {
+            i--;
+          }
+        }
+        return (fruitHasGen = false);
+      }
+
+      function fruitEaten() {
+        // If curPos = to the fruitPos, the specific fruit is removed from the fruit positions array,
+        // and the snake length grows up by one.
+        for (let i = 0; i < fruitsPosArr.length; i++) {
+          if (curPos == fruitsPosArr[i]) {
+            fruitsPosArr.splice(i, 1);
+            snakeLen++;
+            // Adding a new position to the snakeBody array.
+            snakeBody.unshift(curPos);
+            let score = parseInt(scoreNum.innerHTML);
+            score++;
+            scoreNum.innerHTML = score;
+            scoreNumAnim();
+          }
+        }
+      }
+
+      function newGrowth() {
+        // Continuously 'refresh' the snakeBody array with the current positions.
+        snakeBody.push(curPos);
+        snakeBody.shift();
+
+        // The first array element is the position before snake body starts, this position is used to
+        // 're-paint' the last position the snake was, with the background color.
+        document.getElementById(`box${snakeBody[0]}`).style.backgroundColor =
+          backgrColor;
+
+        // Paints the rest of snakeBody elements with the snake color.
+        for (let i = 1; i < snakeBody.length; i++) {
+          document.getElementById(`box${snakeBody[i]}`).style.backgroundColor =
+            snakeColor;
+        }
+      }
+
+      function checkIfLoose() {
+        // In case the user stroked and the snake ran to his body, rises game-over window.
+        for (let i = 0; i < snakeBody.length - 2; i++) {
+          if (curPos == snakeBody[i]) {
+            document.getElementById("container2").style.display = "block";
+            document.onkeydown = "";
+            return true;
+          }
+        }
+      }
+
+      // On mouseover function.
+      function tryAgBtn() {
+        let btn = document.getElementById("tryAgainBtn");
+        btn.style.backgroundColor = "#4b4b4b";
+        btn.style.color = "red";
+        btn.addEventListener("mouseout", () => {
+          btn.style.backgroundColor = "#2e2e2e";
+          btn.style.color = "#FF4A4A";
+        });
+        btn.addEventListener(
+          "mousedown",
+          () => (btn.style.backgroundColor = "black")
+        );
+        btn.addEventListener(
+          "mouseup",
+          () => (btn.style.backgroundColor = "#4b4b4b")
+        );
+        btn.addEventListener("click", () => document.location.reload(true));
+      }
+
+      // Game-over changing color animation.
+      let gameOver = document.getElementById("end");
+      setInterval(() => {
+        gameOver.style.color = "#FF4A4A";
+        let innerInter = setInterval(() => {
+          gameOver.style.color = "#ac65ff";
+          clearInterval(innerInter);
+        }, 250);
+      }, 500);
+
+      function snakeTitleAnim() {
+        let s = document.getElementById("s");
+        let n = document.getElementById("n");
+        let a = document.getElementById("a");
+        let k = document.getElementById("k");
+        let e = document.getElementById("e");
+
+        setTimeout(() => {
+          setInterval(() => {
+            s.style.transform = "scale(1.7)";
+            let sInner = setInterval(() => {
+              s.style.transform = "scale(1)";
+              clearInterval(sInner);
+            }, 500);
+          }, 1500);
+        }, 0);
+
+        setTimeout(() => {
+          setInterval(() => {
+            n.style.transform = "scale(1.7)";
+            let nInter = setInterval(() => {
+              n.style.transform = "scale(1)";
+              clearInterval(nInter);
+            }, 500);
+          }, 1500);
+        }, 250);
+
+        setTimeout(() => {
+          setInterval(() => {
+            a.style.transform = "scale(1.7)";
+            let aInter = setInterval(() => {
+              a.style.transform = "scale(1)";
+              clearInterval(aInter);
+            }, 500);
+          }, 1500);
+        }, 500);
+
+        setTimeout(() => {
+          setInterval(() => {
+            k.style.transform = "scale(1.7)";
+            let kInter = setInterval(() => {
+              k.style.transform = "scale(1)";
+              clearInterval(kInter);
+            }, 500);
+          }, 1500);
+        }, 750);
+
+        setTimeout(() => {
+          setInterval(() => {
+            e.style.transform = "scale(1.7)";
+            let eInter = setInterval(() => {
+              e.style.transform = "scale(1)";
+              clearInterval(eInter);
+            }, 500);
+          }, 1500);
+        }, 1000);
+      }
+
+      function scoreNumAnim() {
+        scoreNum.style.transform = "scale(1.4)";
+        scoreNum.style.color = "#FF4A4A";
+        setTimeout(() => {
+          scoreNum.style.transform = "scale(1)";
+          scoreNum.style.color = "#383838";
+        }, 500);
+      }
+
+      function enterKeyAnim() {
+        let enter = document.getElementById("enter-key");
+        setTimeout(() => {
+          setInterval(() => {
+            enter.style.transform = "scale(1.2)";
+            enter.style.color = "#FF2525";
+            let inner = setInterval(() => {
+              enter.style.transform = "scale(1)";
+              enter.style.color = "#292929";
+              clearInterval(inner);
+            }, 500);
+          }, 1750);
+        }, 0);
+      }
+
+      /*
+      // Displays all boxes numbers.
+      for (let i = 1; i <= 121; i++) {
+        document.getElementById(`box${i}`).innerHTML = i;
+        document.getElementById(`box${i}`).style = "text-align: center;";
+        document.getElementById(`box${i}`).style.color = "#C1C1C1";
+        document.getElementById(`box${i}`).style.fontSize = "12px";
+      }
+      */
+    </script>
+  </body>
+</html>
